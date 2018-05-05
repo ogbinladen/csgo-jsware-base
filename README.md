@@ -12,7 +12,9 @@ from elevated terminal:
 
 install: http://landinghub.visualstudio.com/visual-cpp-build-tools
 
-from regular terminal:
+clone the repo
+
+from regular terminal in csgo-jsware-base:
 
     npm install -g node-gyp
 

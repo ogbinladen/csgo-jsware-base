@@ -1,9 +1,3 @@
-apple-aim-release/
 node_modules/
-aimbot.json
-ents.json
-items.json
-offs-*
-ugly.js
 .eslintrc.json
 .vscode/
