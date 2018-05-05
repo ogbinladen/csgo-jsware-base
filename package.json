@@ -1,0 +1,23 @@
+{
+  "name": "csgo-jsware-base",
+  "version": "0.0.1",
+  "description": "csgo javascript base",
+  "main": "hack.js",
+  "dependencies": {
+    "asynckeystate": "^0.0.2",
+    "memoryjs": "^2.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpappa/csgo-jsware-base.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpappa/csgo-jsware-base/issues"
+  },
+  "homepage": "https://github.com/rpappa/csgo-jsware-base#readme"
+}
