@@ -28,16 +28,7 @@ const inputLoop = new keys.inputLoop();
 
 setTimeout(()=> {
   setInterval(() => {
-    // entities.readEntities();
-    // glow.glow();
-    // console.log(entities.getEntity(0));
-    // local.readLocalPlayer();
-    // console.log(local.player.team);
-
-    // triggerbot
-    /*if(local.player.inCross && local.player.inCross.team != local.player.team) {
-      local.player.shootOnce();
-    }*/
+    local.player.maxFlashAlpha(0)
   }, 10);
 
   // wallhacks in 1 line
@@ -65,6 +56,13 @@ setTimeout(()=> {
   keys.bind(0x56, ()=>{ // v pressed
     aimbot.findTarget();
     aimbot.aimAtTarget();
+  }, true, ()=>{ // v released
+    aimbot.resetTarget();
+  });
+  // bind "1" to bezier aimbot (temporary)
+  keys.bind(0x31, ()=>{ // v pressed
+    aimbot.findTarget();
+    aimbot.aimAtTargetBezier();
   }, true, ()=>{ // v released
     aimbot.resetTarget();
   });

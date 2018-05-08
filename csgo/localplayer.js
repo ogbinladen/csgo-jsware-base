@@ -4,15 +4,13 @@ const Vec3 = require('../util/vec.js').Vec3;
 const math = require('../util/math.js');
 const ents = require('./entities.js');
 
-var localPlayer;
-
 /**
  * Call this to read the local player
  * The local player is just an Entity with some more data and a few more functions
  */
 function readLocalPlayer() {
   let index = csgo.readClientState(off("dwClientState_GetLocalPlayer"),  "int"); // find the index of the local player
-  localPlayer = ents.getEntity(index); // get the entity that corresponds to that index
+  let localPlayer = ents.getEntity(index); // get the entity that corresponds to that index
 
   localPlayer.inCross = ents.getEntity(localPlayer.read(off("m_iCrosshairId"), "int") - 1); // the ID of the entity in the player's crosshair
 
@@ -72,6 +70,18 @@ function readLocalPlayer() {
   localPlayer.flags = localPlayer.read(off('m_fFlags'), "int");
 
   localPlayer.onGround = localPlayer.flags == 257 || localPlayer.flags == 263;
+
+  /**
+   * Sets or gets the max flash alpha
+   * @param {number} [alpha] 0-255
+   */
+  localPlayer.maxFlashAlpha = function(alpha) {
+    if(typeof alpha !== 'undefined' && typeof alpha == 'number') {
+      localPlayer.write(off('m_flFlashMaxAlpha'), alpha, 'float');
+    } else {
+      return localPlayer.read(off('m_flFlashMaxAlpha'), 'float');
+    }
+  }
 
   /**
    * The player is special entity with more data and functions specific to the current player

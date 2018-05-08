@@ -38,6 +38,16 @@ class Entity {
       return csgo.read(this.entityBase + offset, type);
     };
 
+    /**
+     * A helper function to read memory relative to this entity
+     * @param {Number} offset memory offset relative to this entity's base address 
+     * @param {*} data the data you want to write
+     * @param {String} type the type of data to read (eg. "int")
+     */
+    this.write = (offset, data, type) => {
+      return csgo.write(this.entityBase + offset, data, type);
+    };
+
     this.health = this.read(off('m_iHealth'), "int"); // the entity's health
     this.team = this.read(off('m_iTeamNum'), "int"); // the team of the entity (a number)
     this.isAlive = this.read(off('m_lifeState'), "int") == 0; // is this entity alive?

@@ -5,6 +5,7 @@
   "main": "hack.js",
   "dependencies": {
     "asynckeystate": "^0.0.2",
+    "bezier-js": "^2.2.5",
     "memoryjs": "^2.1.0"
   },
   "scripts": {
