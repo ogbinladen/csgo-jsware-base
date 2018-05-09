@@ -5,7 +5,7 @@ const math = require('../util/math.js');
 
 let aimTarget = false;
 
-function findTarget() {
+function findTarget(FOV) {
   if(!aimTarget || !validTarget(aimTarget)) {
     aimTarget = false;
   }
@@ -30,6 +30,9 @@ function findTarget() {
     let angles = math.angles(local.player.head, enemyTeam[i].head);
     let crosshairDistance = Math.sqrt(Math.pow(angles.x - local.player.viewAngles.x, 2) +
                                       Math.pow(math.normalize360(angles.y) - math.normalize360(local.player.viewAngles.y), 2));
+    if(FOV && FOV > 0 && crosshairDistance > FOV) {
+      continue;
+    }
     if(crosshairDistance < minDistance) {
       aimTarget = enemyTeam[i];
       minDistance = crosshairDistance;
@@ -63,7 +66,7 @@ const MAX_VELOCITY = 100;
 /**
  * Max aim accleration in [fake] degrees per second squared
  */
-const ACCELERATION = 420;
+const ACCELERATION = 690;
 
 function aimAtTargetBezier() {
   if(!aimTarget || !validTarget(aimTarget)) {
@@ -113,11 +116,15 @@ function aimAtTargetBezier() {
   }
 
   // console.log(aimTarget.bezier.velocity);
-
+  let punch = local.player.getAimPunch()
   let angle = {
-    x: local.player.viewAngles.x + aimTarget.bezier.curve.get(t).x,
-    y: local.player.viewAngles.y + aimTarget.bezier.curve.get(t).y
+    x: local.player.viewAngles.x + aimTarget.bezier.curve.get(t).x - punch.x*2 * 0.8,
+    y: local.player.viewAngles.y + aimTarget.bezier.curve.get(t).y - punch.y*2 * 0.8
   };
+  if(!aimTarget || !validTarget(aimTarget)) {
+    aimTarget = false;
+    return;
+  }
   local.player.lookAt(angle);
   // console.log(t);
   //let aimDifference = math.angleBetween(local.player.viewAngles, aimAngle);
@@ -134,7 +141,7 @@ function aimAtTarget() {
     aimTarget = false;
     return;
   }
-  local.player.aimAtPoint(aimTarget.head);
+  local.player.aimAtPoint(aimTarget.head, true);
 }
 
 module.exports.aimAtTarget = aimAtTarget;

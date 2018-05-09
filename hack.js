@@ -28,7 +28,15 @@ const inputLoop = new keys.inputLoop();
 
 setTimeout(()=> {
   setInterval(() => {
-    local.player.maxFlashAlpha(0)
+    local.player.maxFlashAlpha(0);
+
+    if(local.player.shotsFired >= 1) {
+      let punch = local.player.getAimPunch();
+      // console.log(punch);
+      local.player.compensateAimPunch(0.8);
+    } else {
+      local.player.resetAimPunchCompensation();
+    }
   }, 10);
 
   // wallhacks in 1 line
@@ -54,14 +62,15 @@ setTimeout(()=> {
   // aimbot
   // here we bind v to call aimbot code
   keys.bind(0x56, ()=>{ // v pressed
-    aimbot.findTarget();
+    aimbot.findTarget(-1);
     aimbot.aimAtTarget();
   }, true, ()=>{ // v released
     aimbot.resetTarget();
   });
+  
   // bind "1" to bezier aimbot (temporary)
   keys.bind(0x31, ()=>{ // v pressed
-    aimbot.findTarget();
+    aimbot.findTarget(10);
     aimbot.aimAtTargetBezier();
   }, true, ()=>{ // v released
     aimbot.resetTarget();

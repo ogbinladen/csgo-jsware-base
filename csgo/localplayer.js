@@ -4,6 +4,8 @@ const Vec3 = require('../util/vec.js').Vec3;
 const math = require('../util/math.js');
 const ents = require('./entities.js');
 
+var aimPunchCompensation = new Vec3(0,0,0);
+
 /**
  * Call this to read the local player
  * The local player is just an Entity with some more data and a few more functions
@@ -40,9 +42,15 @@ function readLocalPlayer() {
   /**
    * Aim at the given point
    * @param {Vec3} target (x,y,z) coordinates of point to aim at
+   * @param {Boolean} aimPunch (x,y,z) compensate for aimpunch?
    */
-  localPlayer.aimAtPoint = (target) => {
+  localPlayer.aimAtPoint = (target, aimPunch) => {
     let vecAngles = math.angles(localPlayer.head, target);
+    if(aimPunch) {
+      let punch = localPlayer.getAimPunch();
+      vecAngles.x -= punch.x*2;
+      vecAngles.y -= punch.y*2;
+    }
     localPlayer.lookAt(vecAngles);
   }
 
@@ -55,6 +63,36 @@ function readLocalPlayer() {
   }
   localPlayer.stopShooting = () => {
     csgo.writeClient(off('dwForceAttack'), false, "int");
+  }
+
+  localPlayer.shotsFired = localPlayer.read(off("m_iShotsFired"), "int");
+
+  localPlayer.getAimPunch = () => {
+    return new Vec3(
+      localPlayer.read(off('m_aimPunchAngle'), "float"),
+      localPlayer.read(off('m_aimPunchAngle') + 4, "float"),
+      localPlayer.read(off('m_aimPunchAngle') + 8, "float")
+    );
+  }
+
+  localPlayer.compensateAimPunch = (strength, angles) => {
+    if(!strength) {
+      strength = 1;
+    }
+    if(!angles) {
+      angles = localPlayer.viewAngles
+    }
+
+    let punch = localPlayer.getAimPunch();
+    localPlayer.lookAt({
+      x: angles.x - (punch.x*2*strength - aimPunchCompensation.x),
+      y: angles.y - (punch.y*2*strength - aimPunchCompensation.y)
+    });
+    aimPunchCompensation.x+=(punch.x*2*strength - aimPunchCompensation.x);
+    aimPunchCompensation.y+=(punch.y*2*strength - aimPunchCompensation.y);
+  }
+  localPlayer.resetAimPunchCompensation = () => {
+    aimPunchCompensation = new Vec3(0,0,0);
   }
 
   /**
