@@ -13,7 +13,9 @@ var aimPunchCompensation = new Vec3(0,0,0);
 function readLocalPlayer() {
   let index = csgo.readClientState(off("dwClientState_GetLocalPlayer"),  "int"); // find the index of the local player
   let localPlayer = ents.getEntity(index); // get the entity that corresponds to that index
-
+  if(localPlayer.bad) {
+    return;
+  }
   localPlayer.inCross = ents.getEntity(localPlayer.read(off("m_iCrosshairId"), "int") - 1); // the ID of the entity in the player's crosshair
 
   localPlayer.head = new Vec3(); // we're gonna redefine the head based off of m_vecOrigin instead of the bone

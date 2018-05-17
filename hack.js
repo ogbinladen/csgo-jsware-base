@@ -22,6 +22,8 @@ const local = require('./csgo/localplayer.js');
 const walls = require('./hacks/walls.js');
 const aimbot = require('./hacks/aimbot.js');
 
+const fs = require('fs');
+
 const entLoop = new entities.readLoop();
 const localLoop = new local.readLoop();
 const inputLoop = new keys.inputLoop();
@@ -42,6 +44,7 @@ setTimeout(()=> {
   // wallhacks in 1 line
   walls.enableWalls();
 
+  let ws = fs.createWriteStream('aim.csv');
   // triggerbot
   // here we bind caps lock to call triggerbot code
   // really this code should be moved to the "hacks" folder, but it is so simple I'll let it live here 
@@ -50,6 +53,8 @@ setTimeout(()=> {
       local.player.shootOnce(); // f em up
       // local.player.aimAt(local.player.inCross.head); <--- life is ez
     }
+    // let ms = new Date().getTime();
+    // ws.write(`\n${ms}, ${local.player.viewAngles.y}, ${local.player.viewAngles.x}`)
   }, true);
 
   // bhop
@@ -68,11 +73,15 @@ setTimeout(()=> {
     aimbot.resetTarget();
   });
   
-  // bind "1" to bezier aimbot (temporary)
-  keys.bind(0x31, ()=>{ // v pressed
+  let aimPressed = () => {
     aimbot.findTarget(10);
     aimbot.aimAtTargetBezier();
-  }, true, ()=>{ // v released
+  }
+  let aimReleased = () => {
     aimbot.resetTarget();
-  });
+  }
+  // bind "1" to bezier aimbot (temporary)
+  keys.bind(0x31, aimPressed, true, aimReleased);
+  // bind "2" to bezier aimbot (temporary)
+  keys.bind(0x32, aimPressed, true, aimReleased);
 }, 100);

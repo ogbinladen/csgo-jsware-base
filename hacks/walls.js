@@ -11,6 +11,8 @@ function showWalls() {
     friendlyTeam[i].glow(R, G, B, A);
   }
   for (i = 0; i < enemyTeam.length; i++) {
+    if(!enemyTeam[i] || enemyTeam[i].bad || enemyTeam[i].dormant || !enemyTeam[i].isAlive)
+      continue
     var R = (255 * (100 - enemyTeam[i].health)) / 100, G = (255 * enemyTeam[i].health) / 100, B = 0, A = 180;
     if(aimbot.aimTarget && aimbot.aimTarget.index == enemyTeam[i].index) {
       A = 255;
@@ -23,7 +25,7 @@ var wallInterval;
 
 function enableWalls(loopTime) {
   if(!loopTime)
-    loopTime = 10;
+    loopTime = 12;
   if(wallInterval)
     clearInterval(wallInterval)
   wallInterval = setInterval(showWalls, loopTime);
